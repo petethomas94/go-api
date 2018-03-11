@@ -8,6 +8,7 @@ import (
 var workouts = make([]Workout, 0)
 var exercises = make([]Exercise, 0)
 var programs = make([]Program, 0)
+var workoutSessions = make(map[int]WorkoutSession)
 
 func GetWorkout(ID int) (*Workout, error) {
 	if len(workouts) == 0 {
@@ -43,6 +44,26 @@ func GetProgram(ID int) (*Program, error) {
 		}
 	}
 	return nil, errors.New("Program not found")
+}
+
+func SaveWorkoutSession(workoutSession *WorkoutSession) (int, error) {
+
+	var ID = len(workoutSessions) + 1
+
+	workoutSessions[ID] = *workoutSession
+
+	return ID, nil
+}
+
+func GetWorkoutSession(ID int) (*WorkoutSession, error) {
+
+	workoutSession, ok := workoutSessions[ID]
+
+	if ok {
+		return &workoutSession, nil
+	}
+
+	return nil, errors.New("Workout session not found")
 }
 
 func populateWorkouts() {

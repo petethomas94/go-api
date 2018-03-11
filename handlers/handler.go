@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-api/repository"
 	. "go-api/types"
 	"io/ioutil"
@@ -48,7 +47,19 @@ var ProgramHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 	}
 })
 
-var WorkoutSessionHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+var WorkoutSessionGetHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	parameters := mux.Vars(r)
+	if workoutSessionID, err := strconv.Atoi(parameters["workoutSessionId"]); err == nil {
+		if workoutSession, err := repository.GetWorkoutSession(workoutSessionID); err == nil {
+			payload, _ := json.Marshal(workoutSession)
+			writeResponse(w, payload)
+		} else {
+			writeError(w, err)
+		}
+	}
+})
+
+var WorkoutSessionPostHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
@@ -62,7 +73,7 @@ var WorkoutSessionHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	fmt.Print(workoutSession)
+	repository.SaveWorkoutSession(workoutSession)
 
 	w.Header().Set("Location", r.URL.Path+"/")
 	w.WriteHeader(http.StatusCreated)

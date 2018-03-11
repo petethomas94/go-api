@@ -16,7 +16,8 @@ func main() {
 	r.Handle("/api/exercise/{exerciseId}", handlers.ExerciseHandler).Methods("GET")
 	r.Handle("/api/exercise", handlers.ExerciseHandler).Methods("GET")
 	r.Handle("/api/program/{programId}", handlers.ProgramHandler).Methods("GET")
-	r.Handle("/api/workoutsession", handlers.WorkoutSessionHandler).Methods("POST")
+	r.Handle("/api/workoutsession", handlers.WorkoutSessionPostHandler).Methods("POST")
+	r.Handle("/api/workoutsession/{workoutSessionId}", handlers.WorkoutSessionGetHandler).Methods("GET")
 
 	http.ListenAndServe(":3000", r)
 }
